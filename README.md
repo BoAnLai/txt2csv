@@ -4,10 +4,10 @@ Transform a txt file which contents in fixed format into a csv file.
 
 ## technical process
 
-1. input doc from local using nodejs fs module Promise API
-2. store data in Buffer which is nodejs built-in object in binary form
+1. input doc from local using fs module Promise API
+2. store data in Buffer which is nodejs built-in object in binary format
 3. detect data(binary) encoding using chardet package
-4. decode data(binary) into string using iconv-lite package, manually setting encoding
+4. decode data(binary) into string using iconv-lite package, automation with error handle
 
 ## about data.txt
 
