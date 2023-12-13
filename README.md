@@ -8,6 +8,8 @@ Transform a txt file which contents in fixed format into a csv file.
 2. store data in Buffer which is nodejs built-in object in binary format
 3. detect data(binary) encoding using chardet package
 4. decode data(binary) into string using iconv-lite package, automation with error handle
+5. parse string into object
+   - expect string being two-dimensional structure, each section with name/title being the first element
 
 ## about data.txt
 
