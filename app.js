@@ -4,25 +4,40 @@ const fsPromises = require('fs').promises
 const chardet = require('chardet')
 const { Buffer } = require('node:buffer')
 const iconv = require('iconv-lite')
+const xml2js = require('xml2js')
+let builder = new xml2js.Builder() //xmlString = builder.buildObject(obj)
+
 
 const path = 'data.txt'
-// console.log(`encoding of ${path}: ${chardet.detectFileSync(path)}\n`)
 
-//promise API
-let dataInString = ''
-readFilePromise(path).then(() => console.log(string2Object(dataInString)))
-
-console.log(`\n===app.js reach end===\n`)
+readFilePromise(path)
+  .then((dataInString) => replaceInvalidCharacter(dataInString))
+  .then((dataInString2) => string2Object(dataInString2))
+  .then((dataInObject)=> builder.buildObject(dataInObject))
+  .then((xmlString) => fsPromises.writeFile('data.xml',xmlString))
+  .catch((err)=>console.log(err))
+  .finally(()=>(console.log(`\n===app.js reach end===\n`)))
 
 
 async function readFilePromise(path) {
   let dataInBinary = await fsPromises.readFile(path)
+  let dataInString
   try {
     dataInString = iconv.decode(Buffer.from(dataInBinary), chardet.detectFileSync(path))
   } catch (error) {
     console.error(`error in readFilePromise(), might occur due to unsupported encoding\n`)
     console.error(error)
   }
+  return dataInString
+}
+
+function replaceInvalidCharacter(str){
+
+  str = str.replaceAll('(','（')
+  str = str.replaceAll(')','）')
+  str = str.replaceAll(' ','')
+  str = str.replaceAll('>','')
+  return str
 }
 
 function string2Object(str) {
@@ -59,11 +74,11 @@ function string2Object(str) {
     arrDepot.forEach((arr) => {
       arr.forEach((elem) => {
         if (arr.indexOf(elem) === 0) {
-          outputObj[arr[0]] = {
+          outputObj[`_${arr[0]}`] = {
             'name': elem
           }
         } else {
-          outputObj[arr[0]][arr.indexOf(elem)] = elem
+          outputObj[`_${arr[0]}`][`_${arr.indexOf(elem)}`] = elem
         }
       })
     })

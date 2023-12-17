@@ -1,19 +1,22 @@
-# txt2csv
+# txt2xml
 
-Transform a txt file which contents in fixed format into a csv file.
+Transform a txt file into a xml file.
 
 ## technical process
 
-1. input doc from local using fs module Promise API
-2. store data in Buffer which is nodejs built-in object in binary format
-3. detect data(binary) encoding using chardet package
-4. decode data(binary) into string using iconv-lite package, automation with error handle
-5. parse string into object
+1. input doc from local by fs module Promise API
+2. store data in Buffer in binary format, as fsPromises.readFile don't support big-5 encoding of which my input doc is
+3. detect data(binary) encoding by chardet package
+4. decode data(binary) into string by iconv-lite package, automation with error handle
+5. replace invalid character for xml2js package
+6. parse string into object
    - expect string being two-dimensional structure, each section with name/title being the first element
+7. parse object into string in XML format by xml2js package
+8. output xml file by fs module Promise API
 
 ## about data.txt
 
-Data.txt added to .gitignore due to privacy.
+data.txt added to .gitignore due to privacy.
 the content look like below:  
 
 - Google mail  
@@ -23,6 +26,8 @@ the content look like below:
 - Riot game  
   - related to google account
 
-## reference
+## dependency
 
-[to-xml](https://www.npmjs.com/package/to-xml) which is a package from npm that transform json to xml.
+- chardet package: detect encoding
+- iconv-lite package: decoding
+- xml2js package: parse object into xml string
